@@ -20,8 +20,7 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationFa
 public class SecurityConfig {
 
 	@Bean
-	public SecurityFilterChain securityFilterChain(HttpSecurity http,
-			AuthenticationSuccessHandler primarySuccessHandler) throws Exception {
+	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		return http
 		// @formatter:off
 			.authorizeHttpRequests(authorize -> authorize
@@ -29,10 +28,10 @@ public class SecurityConfig {
 					.requestMatchers("/challenge/totp").access(new TwoFactorAuthorizationManager())
 					.anyRequest().authenticated())
 		// @formatter:on
-			.formLogin(form -> form
-				.successHandler(new TwoFactorAuthenticationSuccessHandler("/challenge/totp", primarySuccessHandler)))
-			.securityContext(securityContext -> securityContext.requireExplicitSave(false))
-			.build();
+				.formLogin(form -> form
+						.successHandler(new TwoFactorAuthenticationSuccessHandler("/challenge/totp")))
+				.securityContext(securityContext -> securityContext.requireExplicitSave(false))
+				.build();
 	}
 
 	@Bean
@@ -41,7 +40,7 @@ public class SecurityConfig {
 	}
 
 	@Bean
-	public AuthenticationSuccessHandler primarySuccessHandler() {
+	public AuthenticationSuccessHandler authenticationSuccessHandler() {
 		return new SavedRequestAwareAuthenticationSuccessHandler();
 	}
 

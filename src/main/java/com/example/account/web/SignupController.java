@@ -3,7 +3,6 @@ package com.example.account.web;
 import com.example.account.Account;
 import com.example.account.AccountService;
 import com.example.account.AccountUserDetails;
-import com.j256.twofactorauth.TimeBasedOneTimePasswordUtil;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 public class SignupController {
 
 	private final AccountService accountService;
-
 	private final PasswordEncoder passwordEncoder;
 
 	public SignupController(AccountService accountService, PasswordEncoder passwordEncoder) {
@@ -33,8 +31,7 @@ public class SignupController {
 	@PostMapping(path = "/signup")
 	public String signup(SignupForm form) {
 		String encoded = this.passwordEncoder.encode(form.password());
-		String secret = TimeBasedOneTimePasswordUtil.generateBase32Secret();
-		Account account = Account.without2Fa(form.username(), encoded, secret);
+		Account account = Account.account(form.username(), encoded);
 		this.accountService.insert(account);
 
 		// automatic login after signup

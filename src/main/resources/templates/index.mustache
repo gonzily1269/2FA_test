@@ -15,15 +15,6 @@
             <th>Username</th>
             <td>{{account.username}}</td>
         </tr>
-        <tr>
-            <th>2FA Enabled</th>
-            <td>{{account.twoFactorEnabled}}
-                {{^account.twoFactorEnabled}}
-                    <br/>
-                    <a href="/enable-2fa">Enable 2FA</a>
-                {{/account.twoFactorEnabled}}
-            </td>
-        </tr>
     </table>
 {{/account}}
 <br/>

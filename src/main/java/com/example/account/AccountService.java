@@ -16,21 +16,14 @@ public class AccountService {
 
 	public Account findByUsername(String username) {
 		return this.jdbcTemplate.queryForObject(
-				"SELECT username, password, two_factor_secret, two_factor_enabled FROM account WHERE username = ?",
+				"SELECT username, password FROM account WHERE username = ?",
 				new DataClassRowMapper<>(Account.class), username);
 	}
 
 	@Transactional
 	public int insert(Account account) {
 		return this.jdbcTemplate.update(
-				"INSERT INTO account(username, password, two_factor_secret, two_factor_enabled) VALUES (?, ?, ?, ?)",
-				account.username(), account.password(), account.twoFactorSecret(), account.twoFactorEnabled());
+				"INSERT INTO account(username, password) VALUES (?, ?)",
+				account.username(), account.password());
 	}
-
-	@Transactional
-	public Account enable2Fa(Account account) {
-		this.jdbcTemplate.update("UPDATE account SET two_factor_enabled = true WHERE username = ?", account.username());
-		return account.enable2Fa();
-	}
-
 }
